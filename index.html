@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>BL0DWHITE — Software Developer</title>
+
+  <style>
+    :root{
+      --bg1:#050b18;
+      --bg2:#071222;
+      --glass:rgba(255,255,255,.05);
+      --muted:rgba(255,255,255,.6);
+      --accent:#22c1c3;
+      --accent2:#7b61ff;
+      --mono: ui-monospace, "Roboto Mono", monospace;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+
+    body{
+      height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      background:
+        radial-gradient(circle at 10% 10%,rgba(34,193,195,0.06),transparent 10%),
+        radial-gradient(circle at 90% 90%,rgba(123,97,255,0.04),transparent 15%),
+        linear-gradient(180deg,var(--bg1),var(--bg2));
+      font-family:Inter,system-ui;
+      overflow:hidden;
+      padding:20px;
+    }
+
+    /* Particle */
+    canvas#p{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.55;
+      filter:blur(6px);
+      z-index:0;
+    }
+
+    /* Card */
+    .card{
+      position:relative;
+      z-index:2;
+      width:100%;
+      max-width:420px;
+      padding:32px 28px 40px;
+      border-radius:18px;
+      background:rgba(255,255,255,0.04);
+      border:1px solid rgba(255,255,255,0.06);
+      backdrop-filter:blur(10px);
+      text-align:center;
+      color:white;
+      box-shadow:0 0 40px rgba(0,0,0,.5);
+      animation:fadeIn .6s ease;
+    }
+
+    @keyframes fadeIn{
+      from{opacity:0;transform:scale(.95)}
+      to{opacity:1;transform:scale(1)}
+    }
+
+    .avatar{
+      width:80px;
+      height:80px;
+      border-radius:16px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      display:grid;
+      place-items:center;
+      font-size:28px;
+      font-weight:700;
+      margin:0 auto 18px;
+    }
+
+    .name{
+      font-size:28px;
+      font-weight:800;
+      letter-spacing:-.5px;
+    }
+
+    .tag{
+      display:inline-block;
+      margin-top:6px;
+      padding:5px 10px;
+      background:rgba(255,255,255,0.05);
+      border:1px solid rgba(255,255,255,0.06);
+      border-radius:8px;
+      font-size:12px;
+      font-weight:700;
+      color:var(--muted);
+    }
+
+    .console{
+      margin-top:20px;
+      font-family:var(--mono);
+      font-size:13px;
+      color:var(--muted);
+      min-height:18px;
+    }
+
+    .typed{display:inline-block}
+    .caret{
+      display:inline-block;
+      width:10px;
+      height:1em;
+      background:white;
+      margin-left:6px;
+      animation:blink 1s infinite;
+    }
+
+    @keyframes blink{50%{opacity:0}}
+
+    /* TikTok button */
+    .tiktok-btn{
+      margin-top:32px;
+      display:inline-flex;
+      flex-direction:column;
+      align-items:center;
+      gap:6px;
+      padding:12px 24px;
+      background:rgba(255,255,255,0.05);
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius:12px;
+      text-decoration:none;
+      color:white;
+      font-weight:700;
+      transition:.18s;
+      box-shadow:0 6px 18px rgba(0,0,0,.45);
+    }
+    .tiktok-btn:hover{
+      transform:translateY(-4px) scale(1.03);
+      box-shadow:0 8px 24px rgba(123,97,255,0.25);
+    }
+
+    .emoji{
+      font-size:26px;
+      width:38px;height:38px;
+      display:grid;place-items:center;
+      background:rgba(255,255,255,0.05);
+      border-radius:10px;
+    }
+
+    .handle{
+      font-size:12px;
+      color:var(--muted);
+      margin-top:-2px;
+    }
+  </style>
+</head>
+
+<body>
+
+<canvas id="p"></canvas>
+
+<div class="card">
+  <div class="avatar">B</div>
+
+  <div class="name">BL0DWHITE</div>
+  <div class="tag">Software Developer</div>
+
+  <div class="console">
+    <span id="typed" class="typed"></span><span class="caret"></span>
+  </div>
+
+  <!-- PERFECT CENTERED TIKTOK BUTTON -->
+  <a class="tiktok-btn" href="https://tiktok.com/@blodwhitex1" target="_blank">
+    <div class="emoji">🎵</div>
+    <div>TikTok</div>
+    <div class="handle">@blodwhitex1</div>
+  </a>
+</div>
+
+<script>
+/* Typing */
+const phrases=[
+  "hey — i'm BL0DWHITE.",
+  "i build web & mobile apps.",
+  "software developer.",
+  "tiktok: @blodwhitex1"
+];
+let i=0,j=0,fwd=true;
+const el=document.getElementById("typed");
+
+function loop(){
+  let p=phrases[i];
+  if(fwd){
+    j++;
+    if(j>p.length){fwd=false;setTimeout(loop,900);return;}
+  }else{
+    j--;
+    if(j<0){fwd=true;i=(i+1)%phrases.length;}
+  }
+  el.textContent=p.slice(0,j);
+  setTimeout(loop,fwd?40:25);
+}
+setTimeout(loop,300);
+
+/* Particles */
+const c=document.getElementById("p");
+const ctx=c.getContext("2d");
+function rs(){
+  c.width=innerWidth;c.height=innerHeight;
+}
+rs();onresize=rs;
+
+let parts=[];
+for(let k=0;k<40;k++){
+  parts.push({
+    x:Math.random()*innerWidth,
+    y:Math.random()*innerHeight,
+    r:Math.random()*2+1,
+    dx:Math.random()*.6-.3,
+    dy:Math.random()*.6-.3
+  });
+}
+
+function draw(){
+  ctx.clearRect(0,0,c.width,c.height);
+  parts.forEach(p=>{
+    p.x+=p.dx;p.y+=p.dy;
+    if(p.x<0)p.x=c.width;
+    if(p.x>c.width)p.x=0;
+    if(p.y<0)p.y=c.height;
+    if(p.y>c.height)p.y=0;
+
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,6.28);
+    ctx.fillStyle="rgba(255,255,255,0.14)";
+    ctx.fill();
+  });
+  requestAnimationFrame(draw);
+}
+draw();
+</script>
+
+</body>
+</html>
